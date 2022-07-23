@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class AnalyzerImpl implements Analyzer {
+
 	private final Path file;
 
 	public AnalyzerImpl(Path file) {

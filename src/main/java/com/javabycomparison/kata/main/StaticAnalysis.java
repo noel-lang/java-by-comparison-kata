@@ -12,7 +12,7 @@ import java.util.LinkedList;
 public class StaticAnalysis {
 
 	public static void main(String... args) {
-		analyze(args.length == 0 ? null : args[0], args.length == 2 ? args[1].equals("smry") : false);
+		analyze(args.length == 0 ? null : args[0], args.length == 2 && args[1].equals("smry"));
 	}
 
 	private static void analyze(String p, boolean smry) {
@@ -49,8 +49,7 @@ public class StaticAnalysis {
 				int numMethod = 0;
 				int nImports = 0;
 
-				for (int l = 0; l < results.size(); l = l + 1) {
-					ResultData resultData = results.get(l);
+				for (ResultData resultData : results) {
 					if (!smry) {
 						System.out.println(new ResultDataPrinter().print(resultData));
 					}

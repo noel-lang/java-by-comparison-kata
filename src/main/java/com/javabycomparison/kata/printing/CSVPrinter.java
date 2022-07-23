@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class CSVPrinter {
-	private Path csvFile;
+
+	private final Path csvFile;
 
 	public CSVPrinter(String outputFile) {
 		this.csvFile = Paths.get(outputFile);
@@ -22,7 +24,7 @@ public class CSVPrinter {
 				"File Name,Language,Lines of Code,Number of Comments,Number of Methods,Number of Imports\n"
 						.getBytes());
 		Arrays.stream(overallResult)
-				.filter(result -> null != result)
+				.filter(Objects::nonNull)
 				.map(
 						new Function<ResultData, String>() {
 							@Override
@@ -30,7 +32,7 @@ public class CSVPrinter {
 								return String.join(
 										",",
 										result.name,
-										(result.type == 0) == true ? "Java" : "Python",
+										(result.type == 0) ? "Java" : "Python",
 										String.valueOf(result.LOC),
 										String.valueOf(result.commentLOC),
 										String.valueOf(result.numMethod),
@@ -47,7 +49,6 @@ public class CSVPrinter {
 							}
 						});
 
-		// to be sure
 		writer.close();
 	}
 }

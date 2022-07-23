@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 
 public class SearchClient {
 
-	private boolean smry;
+	private final boolean summary;
 
-	public SearchClient(boolean smry) {
-		this.smry = smry;
+	public SearchClient(boolean summary) {
+		this.summary = summary;
 	}
 
 	public LinkedList<ResultData> collectAllFiles(String directoryPath) {
@@ -37,27 +37,27 @@ public class SearchClient {
 							.sorted()
 							.collect(Collectors.toList())) {
 				if (isJavaFile(file)) {
-					if (!smry) {
-						System.out.println("File " + file.toString() + " is a Java file. It will be analyzed.");
+					if (!summary) {
+						System.out.println("File " + file + " is a Java file. It will be analyzed.");
 					}
 					ResultData resultData = new JavaAnalyzer(file).analyze();
 					resultsList.add(resultData);
 				} else if (isPythonFile(file)) {
-					if (!smry) {
+					if (!summary) {
 						System.out.println(
-								"File " + file.toString() + " is a Python file. It will be analyzed.");
+								"File " + file + " is a Python file. It will be analyzed.");
 					}
 					final ResultData resultData = new PythonAnalyzer(file).analyze();
 					resultsList.add(resultData);
 				} else {
 					if (!Files.isDirectory(file)) {
-						if (!smry) {
+						if (!summary) {
 							System.out.println(
-									"File " + file.toString() + " is neither a Java file nor a Python file.");
+									"File " + file + " is neither a Java file nor a Python file.");
 						}
 						resultsList.add(new AnalyzerImpl(file).analyze());
 					} else {
-						if (!smry) {
+						if (!summary) {
 							System.out.println("Skipping directory " + file + ".");
 						}
 					}
@@ -71,17 +71,10 @@ public class SearchClient {
 	}
 
 	private boolean isJavaFile(Path file) {
-		if (file.toString().matches(".*\\.java")) {
-			return true;
-		} else {
-			return false;
-		}
+		return file.toString().matches(".*\\.java");
 	}
 
 	private boolean isPythonFile(Path file) {
-		if (file.getFileName().toString().matches(".*\\.py")) {
-			return true;
-		}
-		return false;
+		return file.getFileName().toString().matches(".*\\.py");
 	}
 }
