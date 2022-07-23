@@ -4,6 +4,8 @@ import java.io.IOException;
 
 public interface Analyzer {
 
-  /** This method analyzes code. */
-  ResultData analyze() throws IOException;
+	/**
+	 * This method analyzes code.
+	 */
+	ResultData analyze() throws IOException;
 }
