@@ -13,15 +13,13 @@ public class ResultDataPrinter {
 				+ "\t"
 				+ language
 				+ "\t"
-				+ data.L
+				+ data.linesOfCode
 				+ "\t"
-				+ data.LOC
+				+ data.linesOfComments
 				+ "\t"
-				+ data.commentLOC
+				+ data.linesOfMethods
 				+ "\t"
-				+ data.numMethod
-				+ "\t"
-				+ data.nImports;
+				+ data.linesOfImports;
 	}
 
 	public String printFileName(ResultData data, int length) {
@@ -40,29 +38,29 @@ public class ResultDataPrinter {
 
 	public String printLOC(ResultData data, int length) {
 		return String.join(
-				"", Collections.nCopies(Math.max(length - String.valueOf(data.LOC).length(), 0), " "))
-				+ data.LOC;
+				"", Collections.nCopies(Math.max(length - String.valueOf(data.linesOfCode).length(), 0), " "))
+				+ data.linesOfCode;
 	}
 
 	public String printCommentLOC(ResultData data, int length) {
 		return String.join(
 				"",
 				Collections.nCopies(
-						Math.max(length - String.valueOf(data.commentLOC).length(), 0), " "))
-				+ data.commentLOC;
+						Math.max(length - String.valueOf(data.linesOfComments).length(), 0), " "))
+				+ data.linesOfComments;
 	}
 
 	public String printNumMethodLOC(ResultData data, int length) {
 		return String.join(
 				"",
-				Collections.nCopies(Math.max(length - String.valueOf(data.numMethod).length(), 0), " "))
-				+ data.numMethod;
+				Collections.nCopies(Math.max(length - String.valueOf(data.linesOfMethods).length(), 0), " "))
+				+ data.linesOfMethods;
 	}
 
 	public String printNImportsLOC(ResultData data, int length) {
 		return String.join(
 				"",
-				Collections.nCopies(Math.max(length - String.valueOf(data.nImports).length(), 0), " "))
-				+ data.nImports;
+				Collections.nCopies(Math.max(length - String.valueOf(data.linesOfImports).length(), 0), " "))
+				+ data.linesOfImports;
 	}
 }

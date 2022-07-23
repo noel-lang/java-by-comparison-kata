@@ -3,30 +3,25 @@ package com.javabycomparison.kata.analysis;
 import java.util.StringJoiner;
 
 public class ResultData {
+
 	public int type;
 	public String name;
-	public int L;
-	public int LOC;
-	public int commentLOC;
-	public int numMethod;
-	public int nImports;
+	public int linesOfCode;
+	public int linesOfComments;
+	public int linesOfMethods;
+	public int linesOfImports;
 
-	public ResultData(int type, String name, int LOC, int commentLOC, int numMethod, int nImports) {
+	public ResultData(int type, String name, int linesOfCode, int linesOfComments, int linesOfMethods, int linesOfImports) {
 		this.type = type;
 		this.name = name.replaceAll("\\\\", "/");
-		this.LOC = LOC;
-		this.commentLOC = commentLOC;
-		this.numMethod = numMethod;
-		this.nImports = nImports;
+		this.linesOfCode = linesOfCode;
+		this.linesOfComments = linesOfComments;
+		this.linesOfMethods = linesOfMethods;
+		this.linesOfImports = linesOfImports;
 	}
 
-	/*
-	public ResultData(boolean java){
-		this.javaFile = java;
-
-	}
-	*/
 	public ResultData() {
+
 	}
 
 	@Override
@@ -36,11 +31,10 @@ public class ResultData {
 		if (o == null || getClass() != o.getClass()) return false;
 		ResultData that = (ResultData) o;
 		return type == that.type
-				&& L == that.L
-				&& LOC == that.LOC
-				&& commentLOC == that.commentLOC
-				&& numMethod == that.numMethod
-				&& nImports == that.nImports
+				&& linesOfCode == that.linesOfCode
+				&& linesOfComments == that.linesOfComments
+				&& linesOfMethods == that.linesOfMethods
+				&& linesOfImports == that.linesOfImports
 				&& name.equals(that.name);
 	}
 
@@ -51,14 +45,61 @@ public class ResultData {
 
 	@Override
 	public String toString() {
-		return new StringJoiner(", ", ResultData.class.getSimpleName() + "[", "]")
-				.add("type=" + type)
-				.add("name='" + name + "'")
-				.add("L=" + L)
-				.add("LOC=" + LOC)
-				.add("commentLOC=" + commentLOC)
-				.add("numMethod=" + numMethod)
-				.add("nImports=" + nImports)
-				.toString();
+		return "ResultData{" +
+				"type=" + type +
+				", name='" + name + '\'' +
+				", linesOfCode=" + linesOfCode +
+				", linesOfComments=" + linesOfComments +
+				", linesOfMethods=" + linesOfMethods +
+				", linesOfImports=" + linesOfImports +
+				'}';
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getLinesOfCode() {
+		return linesOfCode;
+	}
+
+	public void setLinesOfCode(int linesOfCode) {
+		this.linesOfCode = linesOfCode;
+	}
+
+	public int getLinesOfComments() {
+		return linesOfComments;
+	}
+
+	public void setLinesOfComments(int linesOfComments) {
+		this.linesOfComments = linesOfComments;
+	}
+
+	public int getLinesOfMethods() {
+		return linesOfMethods;
+	}
+
+	public void setLinesOfMethods(int linesOfMethods) {
+		this.linesOfMethods = linesOfMethods;
+	}
+
+	public int getLinesOfImports() {
+		return linesOfImports;
+	}
+
+	public void setLinesOfImports(int linesOfImports) {
+		this.linesOfImports = linesOfImports;
 	}
 }

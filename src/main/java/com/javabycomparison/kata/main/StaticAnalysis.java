@@ -12,26 +12,29 @@ import java.util.LinkedList;
 public class StaticAnalysis {
 
 	public static void main(String... args) {
-		analyze(args.length == 0 ? null : args[0], args.length == 2 && args[1].equals("smry"));
+		analyze(args.length == 0 ? null : args[0], args.length == 2 && args[1].equals("withSummary"));
 	}
 
-	private static void analyze(String p, boolean smry) {
+	private static void analyze(String p, boolean withSummary) {
 		StaticAnalysis analyzer = new StaticAnalysis();
-		ResultData[] overallResult = analyzer.run(p == null ? "./src/" : p, smry);
-		if (overallResult != null) {
-			ResultPrinter.printOverallResults(overallResult);
-			try {
-				new CSVPrinter("output.csv").writeCSV(overallResult);
-			} catch (IOException e) {
-				System.err.println("Something went a bit wrong");
-			}
-		} else {
+		ResultData[] overallResult = analyzer.run(p == null ? "./src/" : p, withSummary);
+
+		if (overallResult == null) {
 			System.err.println("Something went terribly wrong");
+			return;
+		}
+
+		ResultPrinter.printOverallResults(overallResult);
+
+		try {
+			new CSVPrinter("output.csv").writeCSV(overallResult);
+		} catch (IOException e) {
+			System.err.println("Couldn't write output to file, abort...");
 		}
 	}
 
-	private ResultData[] run(String directoryPath, boolean smry) {
-		LinkedList<ResultData> results = new SearchClient(smry).collectAllFiles(directoryPath);
+	private ResultData[] run(String directoryPath, boolean withSummary) {
+		LinkedList<ResultData> results = new SearchClient(withSummary).collectAllFiles(directoryPath);
 		if (results != null) {
 			if (results.size() != 0) {
 				int javaLOC = 0;
@@ -50,24 +53,24 @@ public class StaticAnalysis {
 				int nImports = 0;
 
 				for (ResultData resultData : results) {
-					if (!smry) {
+					if (!withSummary) {
 						System.out.println(new ResultDataPrinter().print(resultData));
 					}
 					if (resultData.type == 0) {
-						javaLOC += resultData.LOC;
-						javaCommentLOC += resultData.commentLOC;
-						javaNumMethod += resultData.numMethod;
-						javanImports += resultData.nImports;
+						javaLOC += resultData.linesOfCode;
+						javaCommentLOC += resultData.linesOfComments;
+						javaNumMethod += resultData.linesOfMethods;
+						javanImports += resultData.linesOfImports;
 					} else if (resultData.type == 1) {
-						pyLOC += resultData.LOC;
-						pyCommentLOC += resultData.commentLOC;
-						pyNumMethod += resultData.numMethod;
-						pynImports += resultData.nImports;
+						pyLOC += resultData.linesOfCode;
+						pyCommentLOC += resultData.linesOfComments;
+						pyNumMethod += resultData.linesOfMethods;
+						pynImports += resultData.linesOfImports;
 					} else {
-						LOC += resultData.LOC;
-						commentLOC += resultData.commentLOC;
-						numMethod += resultData.numMethod;
-						nImports += resultData.nImports;
+						LOC += resultData.linesOfCode;
+						commentLOC += resultData.linesOfComments;
+						numMethod += resultData.linesOfMethods;
+						nImports += resultData.linesOfImports;
 					}
 				}
 				return new ResultData[]{
@@ -79,6 +82,7 @@ public class StaticAnalysis {
 				return new ResultData[]{ new ResultData() };
 			}
 		}
+
 		System.err.println("There was a problem with the result!");
 
 		return null;

@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.function.Function;
 
 public class CSVPrinter {
 
@@ -26,20 +25,15 @@ public class CSVPrinter {
 		Arrays.stream(overallResult)
 				.filter(Objects::nonNull)
 				.map(
-						new Function<ResultData, String>() {
-							@Override
-							public String apply(ResultData result) {
-								return String.join(
-										",",
-										result.name,
-										(result.type == 0) ? "Java" : "Python",
-										String.valueOf(result.LOC),
-										String.valueOf(result.commentLOC),
-										String.valueOf(result.numMethod),
-										String.valueOf(result.nImports))
-										+ System.lineSeparator();
-							}
-						})
+						result -> String.join(
+								",",
+								result.name,
+								(result.type == 0) ? "Java" : "Python",
+								String.valueOf(result.linesOfCode),
+								String.valueOf(result.linesOfComments),
+								String.valueOf(result.linesOfMethods),
+								String.valueOf(result.linesOfImports))
+								+ System.lineSeparator())
 				.map(String::getBytes)
 				.forEach(
 						str -> {

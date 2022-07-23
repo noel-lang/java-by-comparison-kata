@@ -1,86 +1,73 @@
 package com.javabycomparison.kata.printing;
 
 import com.javabycomparison.kata.analysis.ResultData;
-import com.javabycomparison.kata.analysis.ResultDataPrinter;
 
-import java.util.Collections;
+import java.util.Arrays;
 
 public class ResultPrinter {
 
 	private static final String FILE_NAME = "File Name";
-	private static final String LANGUAGE = "  Language";
-	private static final String LOC = "  Lines of Code";
-	private static final String COMMENT_LOC = "  Number of Comments";
-	private static final String NUM_METHODS = "  Number of Methods";
-	private static final String N_IMPORTS = "  Number of Imports";
+	private static final String LANGUAGE = "Language";
+	private static final String LINES_OF_CODE = "Lines of Code";
+	private static final String LINES_OF_COMMENTS = "Number of Comments";
+	private static final String LINES_OF_METHODS = "Number of Methods";
+	private static final String LINES_OF_IMPORTS = "Number of Imports";
+
+	private static final String TAB_CHARACTER = "\t";
+
+	private static final String TABLE_FORMAT = "| %-19s | %-19d | %-19d | %-19d | %-19d | %-19d |%n";
+	private static final int COLUMN_WIDTH = 20;
 
 	public static void printOverallResults(ResultData[] overallResult) {
-
 		ResultData r1 = overallResult[0];
 		ResultData r2 = overallResult[1];
 
-		StringBuilder stringBuilderForHeader = new StringBuilder();
-		StringBuilder stringBuilderForFirstResult = new StringBuilder();
-		StringBuilder stringBuilderForSecondResult = new StringBuilder();
-		stringBuilderForHeader
-				.append(
-						String.join(
-								"",
-								Collections.nCopies(
-										Math.max(calculateFileNameLength(r1, r2) - FILE_NAME.length(), 0), " ")))
-				.append(FILE_NAME);
-		ResultDataPrinter rdp = new ResultDataPrinter();
-		stringBuilderForFirstResult.append(rdp.printFileName(r1, calculateFileNameLength(r1, r2)));
-		stringBuilderForSecondResult.append(rdp.printFileName(r2, calculateFileNameLength(r1, r2)));
-		stringBuilderForHeader
-				.append(
-						String.join(
-								"",
-								Collections.nCopies(
-										Math.max(calculateLanguageLength(r1, r2) - LANGUAGE.length(), 0), " ")))
-				.append(LANGUAGE);
-		stringBuilderForFirstResult.append(rdp.printLanguage(r1, calculateLanguageLength(r1, r2)));
-		stringBuilderForSecondResult.append(rdp.printLanguage(r2, calculateLanguageLength(r1, r2)));
-		stringBuilderForHeader
-				.append(
-						String.join(
-								"",
-								Collections.nCopies(Math.max(calculateLOCLength(r1, r2) - LOC.length(), 0), " ")))
-				.append(LOC);
-		stringBuilderForFirstResult.append(rdp.printLOC(r1, calculateLOCLength(r1, r2)));
-		stringBuilderForSecondResult.append(rdp.printLOC(r2, calculateLOCLength(r1, r2)));
-		stringBuilderForHeader
-				.append(
-						String.join(
-								"",
-								Collections.nCopies(
-										Math.max(calculateCommentLOCLength(r1, r2) - COMMENT_LOC.length(), 0), " ")))
-				.append(COMMENT_LOC);
-		stringBuilderForFirstResult.append(rdp.printCommentLOC(r1, calculateCommentLOCLength(r1, r2)));
-		stringBuilderForSecondResult.append(rdp.printCommentLOC(r2, calculateCommentLOCLength(r1, r2)));
-		stringBuilderForHeader
-				.append(
-						String.join(
-								"",
-								Collections.nCopies(
-										Math.max(calculateNumMethodsLength(r1, r2) - NUM_METHODS.length(), 0), " ")))
-				.append(NUM_METHODS);
-		stringBuilderForFirstResult.append(
-				rdp.printNumMethodLOC(r1, calculateNumMethodsLength(r1, r2)));
-		stringBuilderForSecondResult.append(
-				rdp.printNumMethodLOC(r2, calculateNumMethodsLength(r1, r2)));
-		stringBuilderForHeader
-				.append(
-						String.join(
-								"",
-								Collections.nCopies(
-										Math.max(calculateNImportsLength(r1, r2) - N_IMPORTS.length(), 0), " ")))
-				.append(N_IMPORTS);
-		stringBuilderForFirstResult.append(rdp.printNImportsLOC(r1, calculateNImportsLength(r1, r2)));
-		stringBuilderForSecondResult.append(rdp.printNImportsLOC(r2, calculateNImportsLength(r1, r2)));
-		System.out.println(stringBuilderForHeader.toString());
-		System.out.println(stringBuilderForFirstResult.toString());
-		System.out.println(stringBuilderForSecondResult.toString());
+		String[] headings = {
+				"File Name", "Language", "Lines of Code", "Number of Comments",
+				"Number of Methods", "Number of Imports"
+		};
+
+		StringBuilder headerBuilder = new StringBuilder();
+
+		for (String heading : headings) {
+			headerBuilder.append("| ");
+			headerBuilder.append(heading);
+
+			int neededSpaces = COLUMN_WIDTH - heading.length();
+
+			if (neededSpaces > 0) {
+				headerBuilder.append(String.format("%1$" + neededSpaces + "s", ""));
+			}
+		}
+
+		headerBuilder.append("|%n");
+
+		System.out.format(buildStars(headings.length));
+		System.out.format(headerBuilder.toString());
+		System.out.format(buildStars(headings.length));
+
+		Arrays.stream(overallResult)
+				.forEach(result -> System.out.format(TABLE_FORMAT, result.getName(), result.getType(), result.getLinesOfCode(),
+						result.getLinesOfComments(), result.getLinesOfMethods(), result.getLinesOfImports()));
+
+		System.out.format(buildStars(headings.length));
+
+
+	}
+
+	private static String buildStars(int amountOfHeadings) {
+		StringBuilder starBuilder = new StringBuilder();
+
+		for (int i = 0; i < amountOfHeadings; i++) {
+			starBuilder.append("+");
+			for (int j = 0; j <= COLUMN_WIDTH; j++) {
+				starBuilder.append("-");
+			}
+		}
+
+		starBuilder.append("+%n");
+
+		return starBuilder.toString();
 	}
 
 	private static int calculateFileNameLength(ResultData r1, ResultData r2) {
@@ -101,27 +88,27 @@ public class ResultPrinter {
 	private static int calculateLOCLength(ResultData r1, ResultData r2) {
 		// returns the length of the longest string of the three
 		return Math.max(
-				Math.max(String.valueOf(r1.LOC).length(), String.valueOf(r2.LOC).length()), LOC.length());
+				Math.max(String.valueOf(r1.linesOfCode).length(), String.valueOf(r2.linesOfCode).length()), LINES_OF_CODE.length());
 	}
 
 	private static int calculateCommentLOCLength(ResultData r1, ResultData r2) {
 		// returns the length of the longest string of the three
 		return Math.max(
-				Math.max(String.valueOf(r1.commentLOC).length(), String.valueOf(r2.commentLOC).length()),
-				COMMENT_LOC.length());
+				Math.max(String.valueOf(r1.linesOfComments).length(), String.valueOf(r2.linesOfComments).length()),
+				LINES_OF_COMMENTS.length());
 	}
 
 	private static int calculateNumMethodsLength(ResultData r1, ResultData r2) {
 		// returns the length of the longest string of the three
 		return Math.max(
-				Math.max(String.valueOf(r1.numMethod).length(), String.valueOf(r2.numMethod).length()),
-				NUM_METHODS.length());
+				Math.max(String.valueOf(r1.linesOfMethods).length(), String.valueOf(r2.linesOfMethods).length()),
+				LINES_OF_METHODS.length());
 	}
 
 	private static int calculateNImportsLength(ResultData r1, ResultData r2) {
 		// returns the length of the longest string of the three
 		return Math.max(
-				Math.max(String.valueOf(r1.nImports).length(), String.valueOf(r2.nImports).length()),
-				N_IMPORTS.length());
+				Math.max(String.valueOf(r1.linesOfImports).length(), String.valueOf(r2.linesOfImports).length()),
+				LINES_OF_IMPORTS.length());
 	}
 }

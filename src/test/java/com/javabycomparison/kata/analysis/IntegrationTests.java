@@ -17,7 +17,7 @@ class IntegrationTests {
 						new Runnable() {
 							@Override
 							public void run() {
-								StaticAnalysis.main("src/main/resources", "smry");
+								StaticAnalysis.main("src/main/resources", "withSummary");
 							}
 						});
 		Assertions.assertEquals(

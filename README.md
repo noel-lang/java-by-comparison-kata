@@ -53,5 +53,5 @@ $ ./mvnw test
 # run
 $ ./mvnw exec:java
 # run with parameters
-$ ./mvnw exec:java -Dexec.args="src smry"
+$ ./mvnw exec:java -Dexec.args="src withSummary"
 ```
